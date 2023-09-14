@@ -23,12 +23,11 @@ class UserController extends Controller
                 $query = $this->applySearch($query, $search, $searchColumns);
             }
 
-
+            $query = $query->orderByDesc('created_at');
             if ($request->itemsPerPage == -1) {
                 $query = $query->get();
                 return response()->json(['data' => $query, "total" => count($query), 'totalPage' => 1]);
             }
-            $query = $query->orderByDesc('created_at');
             $query = $query->paginate($request->itemsPerPage);
             $totalPage = ceil($query->total() / $request->itemsPerPage);
             return response()->json(['data' => $query->items(), "total" => $query->total(), 'totalPage' => $totalPage]);
