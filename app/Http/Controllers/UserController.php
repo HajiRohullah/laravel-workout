@@ -15,7 +15,15 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
+            $searchColumns = ["first_name", 'last_name', 'username', 'email'];
+            $search = $request->search;
+
             $query = new User();
+            if (!empty($search)) {
+                $query = $this->applySearch($query, $search, $searchColumns);
+            }
+
+
             if ($request->itemsPerPage == -1) {
                 $query = $query->get();
                 return response()->json(['data' => $query, "total" => count($query), 'totalPage' => 1]);
@@ -29,6 +37,8 @@ class UserController extends Controller
         }
     }
 
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -39,10 +49,9 @@ class UserController extends Controller
                 [
                     'first_name'             => 'required|min:3',
                     'last_name'              => 'required|min:3',
-                    'profile'                => 'required',
                     'username'              => 'required|unique:users,username',
                     'email'                  => 'required|email|unique:users,email',
-                    'password'               => 'required|min:6',
+                    'password'               => 'required|min:6|confirmed',
                     'confirm_password'       => 'required|min:6',
                 ]
             );
