@@ -51,7 +51,7 @@ class UserController extends Controller
                     'username'              => 'required|unique:users,username',
                     'email'                  => 'required|email|unique:users,email',
                     'password'               => 'required|min:6|confirmed',
-                    'confirm_password'       => 'required|min:6',
+
                 ]
             );
             $user = new User();
